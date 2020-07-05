@@ -1,5 +1,8 @@
 package utility;
 
+/**
+ * stores weather information for a city from NDTV weather application
+ */
 public class NdtvWeatherDetail {
 
     private String city;
