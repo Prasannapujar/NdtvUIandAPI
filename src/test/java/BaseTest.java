@@ -6,13 +6,12 @@ import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.http.ContentType;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.ResponseSpecification;
-import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+
+
 
 public class BaseTest {
     WebDriver driver;
@@ -27,17 +26,6 @@ public class BaseTest {
        WebDriverManager.firefoxdriver().setup();
        driver= new FirefoxDriver();
        driver.get("https://www.ndtv.com/");
-       try
-        {
-            driver.switchTo().alert().accept();
-            System.out.println("Accepted the alert");
-
-        }
-        catch (NoAlertPresentException e)
-        {
-            System.out.println("Alert is not present");
-        }
-
     }
 
     @BeforeClass
