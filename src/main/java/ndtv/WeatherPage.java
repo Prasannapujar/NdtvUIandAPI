@@ -4,7 +4,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import utility.NdtvWeatherDetail;
 
@@ -151,7 +150,7 @@ public class WeatherPage extends Page {
                case "Condition":weatherDetail.setCondition(temp[1].trim()); break;
                case "Wind":weatherDetail.setWindSpeed(Float.parseFloat(temp[1].split("KPH")[0].trim()));break;
                case "Humidity":weatherDetail.setHumidity(Integer.parseInt(temp[1].split("%")[0].trim()));break;
-               case "Temp in Degrees":weatherDetail.setTempInDgree(Integer.parseInt(temp[1].trim()));break;
+               case "Temp in Degrees":weatherDetail.setTempInDegree(Integer.parseInt(temp[1].trim()));break;
                case "Temp in Fahrenheit":weatherDetail.setTempInFahrenheit(Integer.parseInt(temp[1].trim()));break;
                default: break;
            }
