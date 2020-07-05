@@ -1,5 +1,9 @@
 package utility;
 
+/**
+ * Stores the weather details for a city from opean weather API
+ */
+
 public class openWeatherDetail {
 
     private String city;
