@@ -64,13 +64,15 @@ public class WeatherPage extends Page {
     {
         search(cityName);
         WebDriverWait wait= new WebDriverWait(driver,5);
-        List<WebElement> searchResults= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(searchResult));
-         if(searchResults.size()==0)
-         {
-             return false;  // no matching results for the search text is not found
-         }
-         else
-         {
+        List<WebElement> searchResults;
+
+        try {
+             searchResults = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(searchResult));
+        }catch (Exception e) {
+            return false;
+        }
+
+
              for(WebElement result:searchResults)
              {
                  String idValue=result.getAttribute("id");
@@ -89,9 +91,9 @@ public class WeatherPage extends Page {
                  }
              }
 
-         }
 
         return false;
+
     }
 
     /**
