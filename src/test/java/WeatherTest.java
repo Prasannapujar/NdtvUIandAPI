@@ -2,6 +2,7 @@ import io.restassured.path.json.JsonPath;
 import ndtv.HomePage;
 import ndtv.WeatherPage;
 import org.testng.Assert;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 import utility.NdtvWeatherDetail;
 import utility.WeatherComparator;
@@ -16,16 +17,13 @@ import static io.restassured.RestAssured.when;
 public class WeatherTest extends BaseTest {
     NdtvWeatherDetail detailUI;
     openWeatherDetail detailApi;
-    int temperatureVariance=2;
-    int humidityVariance=10;
-    float windSpeedVariance=2.5f;
-    private String cityName = "Navi Mumbai";
 
     /**
      * Test method to extract the weather details for given city from NDTV weather page
      */
+    @Parameters({"cityName"})
     @Test()
-    public void weatherTestUi() {
+    public void weatherTestUi(String cityName) {
 
         HomePage hp = new HomePage(driver);
         if (hp.clickOnWeather().searchAndSelect(cityName)) // if we are able to select the city
@@ -34,17 +32,22 @@ public class WeatherTest extends BaseTest {
             detailUI = wp.getWeatherDetail(cityName);
             System.out.println(detailUI.getCondition() + " " + detailUI.getWindSpeed() + " " + detailUI.getHumidity() + " " + detailUI.getCity());
         }
+        else
+        {
+            Assert.fail("No Result found for "+cityName);
+        }
 
     }
 
     /**
      * Test method to extract weather details for given city from open weather API
      */
+    @Parameters({"cityName"})
     @Test
-    public void weatherTestApi() {
+    public void weatherTestApi(String cityName) {
         requestSpecification = given().spec(requestSpecification).log().all()
-                .queryParam("q", cityName)
-                .queryParam("appid", apiKey);
+                .queryParam("q", cityName);
+
 
         String response = requestSpecification.when().get("data/2.5/weather")
                 .then().spec(responseSpecification).log().all().assertThat().statusCode(200).extract().response().asString();
@@ -79,9 +82,12 @@ public class WeatherTest extends BaseTest {
      * Test method to compare the temperature value of a city from NDTV and open weather API
      *   fails if the difference not within the provided range mentioned in the variable temperatureVariance
      */
+    @Parameters({"temperatureVariance"})
     @Test(dependsOnMethods = {"weatherTestUi","weatherTestApi"})
-    public void compareTemperature()
+    public void compareTemperature(String temperatureVarianceParam)
     {
+        int temperatureVariance=Integer.parseInt(temperatureVarianceParam);
+
         try
         {
             Assert.assertTrue(WeatherComparator.compareByTemperature(detailUI.getTempInDegree(),detailApi.getTempInDegree(),temperatureVariance));
@@ -96,9 +102,12 @@ public class WeatherTest extends BaseTest {
      * Test method to compare the Humidity value of a city from NDTV and open weather API
      * fails if the difference not within the provided range mentioned in the variable humidityVariance
      */
+    @Parameters({"humidityVariance"})
     @Test(dependsOnMethods = {"weatherTestUi","weatherTestApi"})
-    public void compareHumidity()
+    public void compareHumidity(String humidityVarianceParam)
     {
+
+        int humidityVariance=Integer.parseInt(humidityVarianceParam);
         try
         {
             Assert.assertTrue(WeatherComparator.compareByHumidity(detailUI.getHumidity(),detailApi.getHumidity(),humidityVariance));
@@ -113,12 +122,14 @@ public class WeatherTest extends BaseTest {
      * Test method to compare the WindSpeed value of a city from NDTV and open weather API
      * fails if the difference not within the provided range mentioned in the variable windSpeedVariance
      */
+    @Parameters({"windSpeedVariance"})
     @Test(dependsOnMethods = {"weatherTestUi","weatherTestApi"})
-    public void compareWindSpeed()
+    public void compareWindSpeed(String windSpeedVarianceParam)
     {
+        float windSpeedVariance=Float.parseFloat(windSpeedVarianceParam);
         try
         {
-            Assert.assertTrue(WeatherComparator.compareByWindSpeed(detailUI.getWindSpeed(),detailApi.getWindSpeed(),7.25f));
+            Assert.assertTrue(WeatherComparator.compareByWindSpeed(detailUI.getWindSpeed(),detailApi.getWindSpeed(),windSpeedVariance));
         }
         catch(WeatherMatcher exception)
         {
