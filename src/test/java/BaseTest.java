@@ -10,29 +10,30 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
-
+import org.testng.annotations.Parameters;
 
 
 public class BaseTest {
     WebDriver driver;
-    String apiKey="7fe67bf08c80ded756e598d6f8fedaea";
     RequestSpecification requestSpecification;
     ResponseSpecification responseSpecification;
 
+    @Parameters({"url"})
     @BeforeClass()
-    public void SetUpUi()
+    public void SetUpUi(String url)
     {
 
        WebDriverManager.firefoxdriver().setup();
        driver= new FirefoxDriver();
-       driver.get("https://www.ndtv.com/");
+       driver.get(url);
     }
 
+    @Parameters({"apiKey"})
     @BeforeClass
-    public void SetupApi()
+    public void SetupApi(String apiKey)
     {
 
-        requestSpecification= new RequestSpecBuilder().setBaseUri("http://api.openweathermap.org").setContentType(ContentType.JSON).build();
+        requestSpecification= new RequestSpecBuilder().setBaseUri("http://api.openweathermap.org").setContentType(ContentType.JSON).addQueryParam("appid",apiKey).build();
         responseSpecification= new ResponseSpecBuilder().expectContentType(ContentType.JSON).build();
     }
 
@@ -45,6 +46,7 @@ public class BaseTest {
     @AfterClass
     public void tearDownApi()
     {
-
+        requestSpecification=null;
+        responseSpecification=null;
     }
 }
