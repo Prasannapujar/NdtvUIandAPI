@@ -1,5 +1,8 @@
 package utility;
 
+/**
+ * Utility class file for comparing weather from UI and API
+ */
 public class WeatherComparator {
 
     /**
