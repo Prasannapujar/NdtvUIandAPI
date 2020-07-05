@@ -1,0 +1,13 @@
+<suite name="weatherTest" verbose="1"  parallel="methods" thread-count="5">
+    <parameter name="apiKey"  value="7fe67bf08c80ded756e598d6f8fedaea"/>
+    <parameter name="url"  value="https://www.ndtv.com/"/>
+    <test name="WeatherComparator" >
+        <parameter name="cityName"  value="Navi Mumbai"/>
+        <parameter name="temperatureVariance"  value="2"/>
+        <parameter name="humidityVariance"  value="10"/>
+        <parameter name="windSpeedVariance"  value="2.5"/>
+        <classes>
+            <class name="WeatherTest" />
+        </classes>
+    </test>
+</suite>
