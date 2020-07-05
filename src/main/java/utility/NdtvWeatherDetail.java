@@ -6,7 +6,7 @@ public class NdtvWeatherDetail {
     private String condition;
     private float windSpeed;
     private int humidity;
-    private int tempInDgree;
+    private int tempInDegree;
     private int tempInFahrenheit;
 
     public void setCity(String city) {
@@ -25,8 +25,8 @@ public class NdtvWeatherDetail {
         this.humidity = humidity;
     }
 
-    public void setTempInDgree(int tempInDgree) {
-        this.tempInDgree = tempInDgree;
+    public void setTempInDegree(int tempInDegree) {
+        this.tempInDegree = tempInDegree;
     }
 
     public void setTempInFahrenheit(int tempInFahrenheit) {
@@ -51,8 +51,8 @@ public class NdtvWeatherDetail {
         return humidity;
     }
 
-    public int getTempInDgree() {
-        return tempInDgree;
+    public int getTempInDegree() {
+        return tempInDegree;
     }
 
     public int getTempInFahrenheit() {
