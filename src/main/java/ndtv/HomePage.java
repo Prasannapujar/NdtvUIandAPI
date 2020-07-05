@@ -12,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class HomePage extends Page {
 
     private static final By moreMenuOptions= By.id("h_sub_menu");
+    private static final By cancelAlert=By.xpath("//a[@class='notnow']");
     private static final By weather=By.linkText("WEATHER");
 
     public HomePage(WebDriver driver) {
@@ -19,11 +20,13 @@ public class HomePage extends Page {
     }
 
     /**
+     * cancel news alert and then
      * click on ... on Ndtv home page
      * @return Home Page
      */
     public HomePage clickOnMoreMenu()
     {
+        cancelNewsAlert();
         WebDriverWait wait= new WebDriverWait(driver,10);
         wait.until(ExpectedConditions.elementToBeClickable(moreMenuOptions)).click();
         return this;
@@ -40,5 +43,16 @@ public class HomePage extends Page {
         wait.until(ExpectedConditions.elementToBeClickable(weather)).click();
         return new WeatherPage(driver);
 
+    }
+
+    /**
+     * wait for alert to be displayed and then click on No thanks
+     * @return HomePage
+     */
+    public HomePage cancelNewsAlert()
+    {
+        WebDriverWait wait= new WebDriverWait(driver,30);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(cancelAlert)).click();
+        return this;
     }
 }
