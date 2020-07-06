@@ -1,5 +1,7 @@
 package ndtv;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -10,6 +12,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 
 public class HomePage extends Page {
+    private static Logger log= LogManager.getLogger(HomePage.class);
 
     private static final By moreMenuOptions= By.id("h_sub_menu");
     private static final By cancelAlert=By.xpath("//a[@class='notnow']");
@@ -28,7 +31,9 @@ public class HomePage extends Page {
     {
         cancelNewsAlert();
         WebDriverWait wait= new WebDriverWait(driver,10);
+        log.debug(" waiting for ... menu option");
         wait.until(ExpectedConditions.elementToBeClickable(moreMenuOptions)).click();
+        log.info("clicked on more menu option");
         return this;
     }
 
@@ -40,7 +45,9 @@ public class HomePage extends Page {
     {
         WebDriverWait wait= new WebDriverWait(driver,10);
         clickOnMoreMenu();
+        log.debug(" waiting for weather button be clickable ");
         wait.until(ExpectedConditions.elementToBeClickable(weather)).click();
+        log.info("clicked on weather button");
         return new WeatherPage(driver);
 
     }
@@ -52,7 +59,9 @@ public class HomePage extends Page {
     public HomePage cancelNewsAlert()
     {
         WebDriverWait wait= new WebDriverWait(driver,30);
+        log.debug(" waiting for news alert to be displayed ");
         wait.until(ExpectedConditions.visibilityOfElementLocated(cancelAlert)).click();
+        log.info("clicked No thanks button of the alert ");
         return this;
     }
 }

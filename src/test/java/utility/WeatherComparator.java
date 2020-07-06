@@ -1,10 +1,13 @@
 package utility;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Utility class file for comparing weather from UI and API
  */
 public class WeatherComparator {
-
+    private static Logger log= LogManager.getLogger(WeatherComparator.class);
     /**
      *
      * @param uiTemp  : temperature captured from UI
@@ -15,12 +18,15 @@ public class WeatherComparator {
     public static boolean compareByTemperature(int uiTemp,int apiTemp,int variance) throws WeatherMatcher {
         int diff=getdifference(uiTemp,apiTemp);
 
+
            if(diff<=variance)
            {
+               log.info("Temperature values are with in the range specified "+ variance);
                return true;
 
            } else
            {
+               log.error(" Temperature values are not with in the range specified"+variance);
                throw  new WeatherMatcher(" for Temperature in degree variance of "+ diff + " was observed "+ " Expected was "+ variance);
            }
     }
@@ -37,10 +43,12 @@ public class WeatherComparator {
 
         if(diff<=variance)
         {
+            log.info("Humidity values are with in the range specified "+ variance);
             return true;
 
         } else
         {
+            log.error(" Humidity values are not with in the range specified"+variance);
             throw  new WeatherMatcher(" for Humidity variance of "+ diff + " was observed "+ " Expected was "+ variance);
         }
     }
@@ -57,10 +65,13 @@ public class WeatherComparator {
 
         if(diff<=variance)
         {
+
+            log.error(" Humidity values are not with in the range specified"+variance);
             return true;
 
         } else
         {
+            log.error(" Humidity values are not with in the range specified"+variance);
             throw  new WeatherMatcher(" for WindSpeed variance of "+ diff + " was observed "+ " Expected was "+ variance);
         }
     }
@@ -75,12 +86,17 @@ public class WeatherComparator {
     {  int diff;
         if(value1>value2)
         {
+            log.debug(value1+ " is greater than "+value2 );
             diff=value1-value2;
+            log.debug("Difference value is "+ diff);
         }
         else
         {
+         log.debug(value2+ " is greater than "+value1);
             diff=value2-value1;
+            log.debug("Difference value is "+diff);
         }
+        log.debug(" Difference value "+diff + " Returned ");
      return diff;
     }
 
@@ -94,12 +110,17 @@ public class WeatherComparator {
     {  float diff;
         if(value1>value2)
         {
+            log.debug(value1+ " is greater than "+value2 );
             diff=value1-value2;
+            log.debug("Difference value is "+ diff);
         }
         else
         {
+            log.debug(value2+ " is greater than "+value2);
             diff=value2-value1;
+            log.debug("Difference value is "+diff);
         }
+        log.debug(" Difference value "+diff + " Returned ");
         return diff;
     }
 }

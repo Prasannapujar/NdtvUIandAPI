@@ -1,5 +1,7 @@
 package ndtv;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,11 +12,12 @@ import utility.NdtvWeatherDetail;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Weather page of Ndtv
  */
 public class WeatherPage extends Page {
-
+    private static Logger log=LogManager.getLogger(WeatherPage.class);
     private static final By loading= By.id("loading");
     private static final By searchField=By.id("searchBox");
     private static final By searchResult=By.xpath("//div[@class='message' and count(@style)=0]//input");
@@ -35,7 +38,9 @@ public class WeatherPage extends Page {
     {
         WebDriverWait wait= new WebDriverWait(driver,10);
         WebElement loadingText=driver.findElement(loading);
+        log.debug("waiting for loading ... symbol to disappear");
         wait.until(ExpectedConditions.invisibilityOf(loadingText));
+        log.info("Weather page is displayed");
         return this;
     }
 
@@ -49,8 +54,12 @@ public class WeatherPage extends Page {
      waitForWeatherPage();
      WebDriverWait wait= new WebDriverWait(driver,5);
      WebElement searchBox=driver.findElement(searchField);
+     log.debug("waiting for search box to display");
      wait.until(ExpectedConditions.visibilityOf(searchBox));
+     log.debug("search box is displayed ");
      searchBox.sendKeys(cityName);
+     log.info("Performed search using "+cityName);
+
      return this;
 
     }
@@ -67,8 +76,11 @@ public class WeatherPage extends Page {
         List<WebElement> searchResults;
 
         try {
+            log.debug("waiting for search results to display in the drop down ");
              searchResults = wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(searchResult));
+             log.debug("Search results are present");
         }catch (Exception e) {
+            log.warn("Search result is not displayed");
             return false;
         }
 
@@ -78,20 +90,24 @@ public class WeatherPage extends Page {
                  String idValue=result.getAttribute("id");
                  if(cityName.equalsIgnoreCase(idValue))  // this will handle for search case like mumbai where mumbai and Navi mumbai appears in result
                  {
+                     log.debug(" Matching city is found ");
                        List<String> selectedCities=getSelectedCities();
                           if(!selectedCities.contains(idValue))  // if city is not already selected
                           {
+                              log.debug(" Matching city is not selected already ");
                               result.click();  // click on the city and return true
+                              log.info("selected the matching city");
                               return  true;
                           }
                           else
                           {
+                              log.info("Matching City is already selected");
                               return true; // city is already selected no need to click, just return true
                           }
                  }
              }
 
-
+        log.info(" No Matching cities found in the suggestion ");
         return false;
 
     }
@@ -104,11 +120,15 @@ public class WeatherPage extends Page {
     {
         List<String> cities= new ArrayList<String> ();
         WebDriverWait wait= new WebDriverWait(driver,5);
+        log.debug("waiting for selected cities to be present in the DOM ");
       List<WebElement> getCitiesSelected= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(citesSelected));
+      log.debug("selected cities are present in the DOM ");
       for(WebElement city:getCitiesSelected)
       {
+          log.debug(city.getText()+" added to selected cities ");
           cities.add(city.getText());
       }
+      log.info("returned the list of cities selected ");
       return cities;
 
     }
@@ -125,8 +145,13 @@ public class WeatherPage extends Page {
       {
           if(city.getText().equalsIgnoreCase(cityName))
           {
+              log.info("clicked on city"+city.getText());
               city.click();
+          }else
+          {
+              log.debug(city.getText() + " is not matching with to be clicked city "+cityName);
           }
+
       }
 
         return this;
@@ -142,11 +167,15 @@ public class WeatherPage extends Page {
     WebDriverWait wait= new WebDriverWait(driver,5);
     NdtvWeatherDetail weatherDetail= new NdtvWeatherDetail();
     weatherDetail.setCity(cityName);
+    log.debug("Ndtv weather detail object set city name as "+cityName);
     clickOnCity(cityName);
+    log.debug("waitting for weather pop up to be displayed");
     List<WebElement> weatherInfo= wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(weatherDetailElement));
+    log.debug("weather info popup is displayed ");
     for(WebElement detail:weatherInfo)
     {
         String[] temp= detail.getText().split(":"); // ex Condition : Overcast split based on :
+           log.debug("setting up in Ndtv weather details object "+temp[0].trim() + ":"+temp[1].trim());
            switch (temp[0].trim())
            {
                case "Condition":weatherDetail.setCondition(temp[1].trim()); break;
@@ -157,7 +186,7 @@ public class WeatherPage extends Page {
                default: break;
            }
     }
-
+     log.info("returned NdtvWeatherDetail object");
     return weatherDetail;
 
 }
